@@ -25,7 +25,7 @@ device_list = ['GridL1', 'GridL2', 'GridL3', 'NIBEL1', 'NIBEL2', 'NIBEL3', 'Stov
 # Function storing data in Smappee JSON format in a database
 def store_to_database(data):
     # Input JSON format: see example SmappeeJSON_Example.json
-    conn = sqlite3.connect('example.db')           # Open database (same name as in Smappee_DatabaseCreate.py
+    conn = sqlite3.connect('example.db')           # Open database (same name as in Smappee_DatabaseCreate.py)
     c = conn.cursor()
     for sensor in data['intervalDatas']:
         try:                                        # Deal with last part of the data (see example json), which has no publishIndex
@@ -50,10 +50,10 @@ def store_to_database(data):
                          measurementKind, unit, phase, channel, mRID, value)
             c.execute("INSERT INTO data VALUES (?,?,?,?,?,?,?,?,?,?,?)",new_entry) #Add to measurements Database
                 # Assumes that the database already exists
-            # Store current weather
-            new_weather_entry = current_weather(utcEndtime)
-            c.execute("INSERT INTO weather VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", new_weather_entry)  # Add to weather Database
-            conn.commit()
+    # Store current weather
+    new_weather_entry = current_weather(utcEndtime)
+    c.execute("INSERT INTO weather VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", new_weather_entry)  # Add to weather Database
+    conn.commit()
     conn.close()                                    #Not sure if we need to connect and close everytime
 
 
@@ -73,6 +73,7 @@ def on_connect(client, userdata, flags, rc):            # Automatically subscrib
 def on_message(client, userdata, msg):                  # Store to database on message
     print('New data received')
     new_data = json.loads(str(msg.payload))
+    print(new_data)
     store_to_database(new_data)
 
 client = mqtt.Client()                                  # Create a new Client object

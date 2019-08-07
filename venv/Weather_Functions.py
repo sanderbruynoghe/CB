@@ -1,4 +1,5 @@
 import pyowm                        #Package for weather forecasts via the OpenWeather API
+    # On raspberry pi: use sudo pip install pyowm
 from datetime import datetime
 
 def current_weather(timestamp):
