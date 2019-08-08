@@ -14,7 +14,7 @@ def current_weather(timestamp):
     uvi = owm.uvindex_around_coords(house_lat, house_lon)
 
     # Current weather from Open Weather Map
-    new_entry = (timestamp, w.get_reference_time(timeformat='date').timestamp(), w.get_clouds(), w.get_rain(), w.get_wind(),
+    new_entry = (timestamp, w.get_reference_time(timeformat='date').timestamp(), w.get_clouds(), str(w.get_rain()), str(w.get_wind()),
                  w.get_humidity(), w.get_pressure()['press'], w.get_temperature(unit='celsius')['temp'], uvi.get_value(),
                  w.get_status(), w.get_detailed_status(), w.get_weather_code())
     return new_entry

@@ -3,7 +3,7 @@ import sqlite3
 '''Script to create a new SQLite database + create new data&weather table in it'''
 
 # Create and connect to new database with chosen name
-database = 'example.db'             #Make sure this is the samen in Smappee_Connect_and_Store.py
+database = 'Smappee_data.db'             #Make sure this is the samen in Smappee_Connect_and_Store.py
 conn = sqlite3.connect(database)
 
 # Create new table with certain scheme
