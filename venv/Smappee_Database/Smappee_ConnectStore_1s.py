@@ -7,7 +7,7 @@ import Smappee_DatabaseStore
 
 '''Server (broker) and topic data'''
 MQTT_SERVER = '192.168.68.109'                                                  # Smappee Infinity IP address
-MQTT_PATH = 'servicelocation/59e6a8c4-f665-4c34-a3ee-2c492da1c2de/aggregated'   # Aggregated 5 min data
+MQTT_PATH = 'servicelocation/59e6a8c4-f665-4c34-a3ee-2c492da1c2de/realtime'   # Aggregated 5 min data
 client = mqtt.Client()
 
     # The callback for when the client receives a CONNACK response from the server (= when connection is made)
