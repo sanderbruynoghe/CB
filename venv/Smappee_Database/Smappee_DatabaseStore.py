@@ -1,11 +1,13 @@
 # Smappee DatabaseStore.py
+'''Script containing database storing functions'''
+    # Remark: database&tables must already be created in Smappee_DatabaseCreate.py
 import json
 import sqlite3
 from Weather_Functions import current_weather
 
-# On the aggregated topic, only a 'publishIndex' is given, but not the name of the CT/device being measured
-# Therefore, a mapping is required between indexe and CT/device:
-    # E.g.: publishIndex = 0 --> meter 550001259/D --> GridL1
+'''publishIndex mapping'''
+# Each measurement has a 'publishIndex' mapping to a certain CT and device:
+    # E.g.: publishIndex = 0 --> CT 550001259/D --> GridL1
 CT_list = ['1259/D', '1259/C', '1259/B', '1259/A', '1258/D', '1258/C', '1258/B', '1258/A',
                '1260/D', '554/C', '555/B', '555/A', '554/D', '554/B', '554/A', '555/D', '555/C',
                '','','','General']
@@ -13,8 +15,36 @@ device_list = ['GridL1', 'GridL2', 'GridL3', 'NIBEL1', 'NIBEL2', 'NIBEL3', 'Stov
                 'StoveL3', 'Dishwasher', 'Solar8x230', 'Solar22x230', 'Oven', 'KitchenOther','WashingMachine', 'ClothesDryer', 'Poolhouse',
                '','','','General']
 
-def store_to_database(data):
-    # Input JSON format: see example SmappeeJSON_Example.json
+'''Database storing functions'''
+def store_to_database_1s(data):
+    '''Function storing 1s Smappee data'''
+    # Input JSON format: see example SmappeeJSON_1s.json
+    conn = sqlite3.connect('Smappee_data.db')
+    c = conn.cursor()
+    utcTimeStamp = data['utcTimeStamp']
+    totalPower = data['totalPower']
+    totalReactivePower = data['totalReactivePower']
+    for sensor in data['channelPowers']:
+        publishIndex = sensor['publishIndex']
+        CT = CT_list[publishIndex]
+        device = device_list[publishIndex]
+        current = sensor['current']
+        phase = sensor['phaseId']
+        power = sensor['power']
+        new_entry = (utcTimeStamp, publishIndex, CT, device, current, phase, power)
+        c.execute("INSERT INTO data1s VALUES (?,?,?,?,?,?,?)", new_entry)                   # Add to 1s table
+            # Assumes that the database already exists
+    new_entry_power = (utcTimeStamp, totalPower, totalReactivePower)
+    c.execute("INSERT INTO power1s VALUES (?,?,?)", new_entry_power)
+        # Assumes that the database already exists
+    conn.commit()
+    conn.close()
+    print('New 1s data added')
+
+
+def store_to_database_5m(data):
+    '''Function storing 5m Smappee data'''
+    # Input JSON format: see example SmappeeJSON_5m.json
     conn = sqlite3.connect('Smappee_data.db')           # Open database (same name as in Smappee_DatabaseCreate.py)
     c = conn.cursor()
     for sensor in data['intervalDatas']:
@@ -38,7 +68,7 @@ def store_to_database(data):
             # Store measurements
             new_entry = (utcEndtime, publish_index, CT, device, commodity,
                          measurementKind, unit, phase, channel, mRID, value)
-            c.execute("INSERT INTO data VALUES (?,?,?,?,?,?,?,?,?,?,?)",new_entry)          # Add to measurements Database
+            c.execute("INSERT INTO data5m VALUES (?,?,?,?,?,?,?,?,?,?,?)",new_entry)          # Add to 5min table
                 # Assumes that the database already exists
     # Store current weather
     new_weather_entry = current_weather(utcEndtime)
@@ -46,4 +76,4 @@ def store_to_database(data):
         # Assumes that the database already exists
     conn.commit()
     conn.close()
-    print('New data added')
+    print('New 5m data added')

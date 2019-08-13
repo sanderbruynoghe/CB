@@ -19,9 +19,7 @@ MQTT_PATH = 'servicelocation/59e6a8c4-f665-4c34-a3ee-2c492da1c2de/realtime'
     # Other possible topics to subscribe to are given in the manual
 
 '''Setting up a connection'''
-client = mqtt.Client('1')              # Create a Client object, with a unique id (here: 'Sander')
-def return_total_power(data):
-    print(data['totalPower'])
+client = mqtt.Client()              # Create a Client object
 
 #Define 2 functions:
     # The callback for when the client receives a CONNACK response from the server (= when connection is made)
@@ -33,7 +31,6 @@ def on_connect(client, userdata, flags, rc):
 
     # The callback for when a PUBLISH message is received from the server (actions to do when new data comes in)
 def on_message(client, userdata, msg):
-
     print(msg.topic + " " + str(msg.payload))       #Simply print received data
     # Add them to the Client object
 

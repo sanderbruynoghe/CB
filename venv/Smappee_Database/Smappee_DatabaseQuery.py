@@ -1,3 +1,5 @@
+# Smappee_DatabaseQuery.py
+'''Query the (default) Smappee database'''
 import sqlite3
 
 def database_query(query, database = 'Smappee_data.db'):
